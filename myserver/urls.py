@@ -19,4 +19,6 @@ from goodlist import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('getList/', views.getList),
+    url('addList/', views.addList),
+    url('getdetail/', views.getdetail),
 ]

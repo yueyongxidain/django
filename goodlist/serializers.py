@@ -7,4 +7,4 @@ from goodlist.models import goodlist
 class goodlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = goodlist
-        fields = '__all__'
+        fields ='__all__'
