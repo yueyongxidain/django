@@ -11,7 +11,7 @@ class goodlist(models.Model):
     goodPrice = models.FloatField(default=0.00)
     #商品类型
     goodType = models.IntegerField(default=1)
-    #商品类型
+    #商品是否是二手
     goodIsNew = models.BooleanField(default=True)
     #商品描述
     goodDesc = models.TextField(null=True,blank=True,default='')

@@ -41,8 +41,13 @@ INSTALLED_APPS = [
     'goodlist',
     'imglist',
     'userlist',
+    'django_filters',
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -82,9 +87,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django',
         'USER': 'root',
-        'PASSWORD': 'xfgh1234',
+        'PASSWORD': 'root',
         'HOST': '127.0.0.1',
-        'PORT': '8806',
+        'PORT': '3306',
     }
 }
 
