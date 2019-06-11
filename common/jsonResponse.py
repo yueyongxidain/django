@@ -28,7 +28,7 @@ class JsonResponse(Response):
                 '`.error`. representation.'
             )
             raise AssertionError(msg)
-        self.data = {"code": code, "message": msg, "data": data}
+        self.data = {"code": code, "message": msg, "data": data,}
         self.template_name = template_name
         self.exception = exception
         self.content_type = content_type
