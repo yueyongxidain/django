@@ -10,7 +10,6 @@ from goodlist.serializers import goodlistSerializer
 from common.MyPageNumberPagination import MyPageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from django_filters import rest_framework
 from .filter import GoodsFilter
 # Create your views here.
 
@@ -20,8 +19,8 @@ def getList(request):
     if isinstance(request, Request) == False:
         return JsonResponse(status=status.HTTP_400_BAD_REQUEST,content_type='application/json')
     if request.method == 'POST':
-        filter_backends = (DjangoFilterBackend,)
-        goods = goodlist.objects.all()
+        filter_backends = (DjangoFilterBackend)
+        goods = goodlist.objects.all().order_by('-createTime')
         #过滤
         data = GoodsFilter(request.data,queryset=goods).qs
         totle = len(goodlistSerializer(data,many=True).data)
@@ -39,15 +38,22 @@ def addList(request):
     if isinstance(request, Request) == False:
         return JsonResponse(status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
     if request.method == 'POST':
-        print(request.data)
         if not request.data:
             return JsonResponse(status=status.HTTP_200_OK, msg='参数不允许为空',content_type='application/json')
-        serializer = goodlistSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(status=status.HTTP_200_OK, code=0,content_type='application/json')
         else:
-            return JsonResponse(serializer.errors,status=status.HTTP_200_OK, msg='新增参数错误', content_type='application/json')
+            if 'id' in request.data:
+                goods = goodlist.objects.get(id=request.data['id'])
+                serializer = goodlistSerializer(data=goods)
+                serializer.update(instance=goods, validated_data=request.data)
+                return JsonResponse(status=status.HTTP_200_OK, code=0, content_type='application/json')
+            else:
+                serializer = goodlistSerializer(data=request.data)
+                if serializer.is_valid():
+
+                    serializer.save()
+                    return JsonResponse(status=status.HTTP_200_OK, code=0,content_type='application/json')
+                else:
+                    return JsonResponse(serializer.errors,status=status.HTTP_200_OK, msg='新增参数错误', content_type='application/json')
 #获取商品详情
 @api_view(['GET'])
 def getdetail(request):
