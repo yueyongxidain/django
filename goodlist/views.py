@@ -65,3 +65,19 @@ def getdetail(request):
             goods = goodlist.objects.filter(id = params['id'])
             serializer = goodlistSerializer(goods,many=True)
             return JsonResponse(serializer.data, code=0, content_type='application/json')
+
+# 删除商品列表
+@api_view(['POST'])
+def deleteList(request):
+    if isinstance(request, Request) == False:
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+    if request.method == 'POST':
+        if not request.data:
+            return JsonResponse(status=status.HTTP_200_OK, msg='参数不允许为空', content_type='application/json')
+        else:
+            if 'id' in request.data:
+                goodlist.objects.get(id = request.data['id']).delete()
+                return JsonResponse(code=0, content_type='application/json')
+            else:
+                return JsonResponse(status=status.HTTP_200_OK, msg='参数不允许为空', content_type='application/json')
+

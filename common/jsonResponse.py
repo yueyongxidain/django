@@ -12,7 +12,7 @@ class JsonResponse(Response):
     def __init__(self, data=None, code=1, msg=None,
                  status=None,
                  template_name=None, headers=None,
-                 exception=False, content_type=None):
+                 exception=False, content_type=None,**arg):
         """
         Alters the init arguments slightly.
         For example, drop 'template_name', and instead use 'data'.
@@ -28,7 +28,7 @@ class JsonResponse(Response):
                 '`.error`. representation.'
             )
             raise AssertionError(msg)
-        self.data = {"code": code, "message": msg, "data": data,}
+        self.data = {"code": code, "message": msg, "data": data,**arg}
         self.template_name = template_name
         self.exception = exception
         self.content_type = content_type
