@@ -7,6 +7,7 @@ from rest_framework.request import Request
 from django.shortcuts import render
 from goodlist.models import goodlist
 from goodlist.serializers import goodlistSerializer
+from imglist.serializers import imglistSerializer
 from common.MyPageNumberPagination import MyPageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -48,10 +49,20 @@ def addList(request):
                 return JsonResponse(status=status.HTTP_200_OK, code=0, content_type='application/json')
             else:
                 serializer = goodlistSerializer(data=request.data)
-                if serializer.is_valid():
 
-                    serializer.save()
-                    return JsonResponse(status=status.HTTP_200_OK, code=0,content_type='application/json')
+                if serializer.is_valid():
+                    x =serializer.save()
+
+                    if 'imgList' in request.data:
+                        for i in request.data['imgList']:
+                            i['sourceId'] = x.id
+                            i['sourceType'] = 0
+                        imgSerializer = imglistSerializer(data=request.data['imgList'],many=True)
+                        if imgSerializer.is_valid(raise_exception=True):
+                            imgSerializer.save()
+                            return JsonResponse(status=status.HTTP_200_OK, code=0,content_type='application/json')
+                        return JsonResponse(status=status.HTTP_200_OK, msg='图片保存出错', content_type='application/json')
+                    return JsonResponse(status=status.HTTP_200_OK, msg='轮播图数据出错', content_type='application/json')
                 else:
                     return JsonResponse(serializer.errors,status=status.HTTP_200_OK, msg='新增参数错误', content_type='application/json')
 #获取商品详情

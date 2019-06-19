@@ -16,7 +16,8 @@ def getImgurl(request):
     if isinstance(request, Request) == False:
         return JsonResponse(status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
     if request.method == 'POST':
-        myFile=request.FILES.get('upload_file',None)
+        myFile=request.FILES.get('file',None)
+        print(myFile)
         #需要填写你的 Access Key 和 Secret Key
         access_key = 'aMDZv5nfw4FAd7SKj1NtF3-Z8eClmndPE7drLR7p'
         secret_key = 'OLy8QvMoAFYOAfOBNjmF6vR9KPZUo3NQeOUiTLv2'
