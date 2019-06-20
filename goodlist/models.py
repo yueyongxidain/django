@@ -34,8 +34,8 @@ class goodlist(models.Model):
     salesVolume = models.IntegerField(default=0)
     #收藏量
     collectionNum = models.IntegerField(default=1)
-    #是否为平台
-    platform = models.IntegerField(default=0)
+    #是否审核 0 待审核  1 审核通过  2 审核驳回
+    isCheck = models.IntegerField(default=0)
     #创建时间
     createTime = models.DateTimeField(auto_now_add=True)
     #支持退货日期

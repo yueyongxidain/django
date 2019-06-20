@@ -4,6 +4,7 @@
 from rest_framework import serializers
 from goodlist.models import goodlist
 from imglist.models import imglist
+from django.core.serializers import serialize
 from imglist.serializers import imglistSerializer
 
 class goodlistSerializer(serializers.ModelSerializer):
@@ -12,5 +13,5 @@ class goodlistSerializer(serializers.ModelSerializer):
         model = goodlist
         fields ='__all__'
     def get_imgList(self, obj):
-
-        return serializers.serialize("json",imglist.objects.filter(sourceType=0,sourceId=obj.id))
+        result = imglist.objects.filter(sourceType=0,sourceId=obj.id)
+        return imglistSerializer(result,many=True).data

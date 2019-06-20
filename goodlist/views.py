@@ -6,6 +6,7 @@ from common.jsonResponse import JsonResponse
 from rest_framework.request import Request
 from django.shortcuts import render
 from goodlist.models import goodlist
+from imglist.models import imglist
 from goodlist.serializers import goodlistSerializer
 from imglist.serializers import imglistSerializer
 from common.MyPageNumberPagination import MyPageNumberPagination
@@ -44,17 +45,28 @@ def addList(request):
         else:
             if 'id' in request.data:
                 goods = goodlist.objects.get(id=request.data['id'])
+                img = imglist.objects.filter(sourceId=request.data['id'])
+                if img:
+                    img.delete()
+                if 'imgList' in request.data:
+                    for i in request.data['imgList']:
+                        i['sourceId'] = request.data['id']
+                        i['sourceType'] = 0
+                    imgSerializer = imglistSerializer(data=request.data['imgList'], many=True)
+                    if imgSerializer.is_valid(raise_exception=True):
+                        imgSerializer.save()
+                    else:
+                        return JsonResponse(status=status.HTTP_200_OK, msg='图片保存出错', content_type='application/json')
                 serializer = goodlistSerializer(data=goods)
                 serializer.update(instance=goods, validated_data=request.data)
                 return JsonResponse(status=status.HTTP_200_OK, code=0, content_type='application/json')
             else:
                 serializer = goodlistSerializer(data=request.data)
-
                 if serializer.is_valid():
                     x =serializer.save()
-
                     if 'imgList' in request.data:
                         for i in request.data['imgList']:
+                            print(i)
                             i['sourceId'] = x.id
                             i['sourceType'] = 0
                         imgSerializer = imglistSerializer(data=request.data['imgList'],many=True)
